@@ -1,0 +1,373 @@
+0. Useful Links
+1. Notes
+2. DATABASE Commands
+3. TABLE Commands
+4. DATATYPES
+----------------------------------------------------------------------------------------------------
+0. Useful Links
+    https://www.youtube.com/watch?v=DjhthBTXvXg
+    https://ide.goorm.io/my/dashboard#/containers
+    MySql Cheat Sheet - https://gist.github.com/nax3t/767e06f6af0bafc70b4c4cba0c8d38e7
+        mysql-ctl cli
+
+0a. IMP COMMANDS
+    SHOW DATABASES; -> USE <database>; SELECT DATABASE(); SHOW TABLES; DESC <table_name> / SHOW COLUMNS in <table_name>;
+
+1. Notes
+    - CAPTIAL is used to separate SQL COMMANDS from user input commands
+    - ';' can be in next line
+
+2. DATABASE Commands
+    show databases;
+
+    CREATE DATABASE soap_store;
+    CREATE DATABASE DogApp;
+
+    DROP DATABASE DogApp;
+
+    USE soap_store;
+        - Switch to a Database
+
+    SELECT database();
+        - Shows the current database;
+
+3. TABLE Commands
+    TABLEs hold data
+
+    CREATE TABLE tablename 
+        (
+            column_name data_type,
+            column_name data_type
+        );
+
+         CREATE TABLE tweets ( Username varchar(15), Content varchar(140), FavoritesCount int );
+
+    SHOW
+        - SHOW TABLES;
+        - SHOW COLUMNS FROM <table_name>
+
+    DESCRIBE/DESC
+        - DESCRIBE <table_name>
+
+    DELETE/DROP 
+        - DROP TABLE  <tablename>
+
+4. DATATYPES
+    SQL forces all COLUMN is of Same Type
+    Can't have something like
+        Name Age
+        A    1
+        B    Two
+
+    Numeric Types - INT
+        Whole Number
+
+    String - VARCHAR
+        Single Quote
+
+        varchar(100) - 100 specifies the length of String we will have
+
+5. INSERT
+    INSERT INTO table_name(column1, column2) VALUES ("val1", val2);
+
+6. How to INSERT VARCHAR (String) values with Quotes
+    You can do it a couple of ways:
+        Escape the quotes with a backslash: "This text has \"quotes\" in it" or 'This text has \'quotes\' in it'
+        Alternate single and double quotes: "This text has 'quotes' in it" or 'This text has "quotes" in it'
+
+7. SHOW WARNINGS
+    - Used to display warnings from a command
+
+8. DEFAULT VALUES in case of WARNINGS
+    - If you pass the wrong type INT instead of VARCHAR, then default value will get saved
+
+    - String: Blank / Empty String
+    - INT: 0
+
+9. Is both DEFAULT and NOT NULL needed?
+    Yes, else one could explictly pass NULL as the value;
+
+10. PRIMARY_KEY and AUTO_INCREMENT
+
+11. QUERY to Create and Insert with Primary Key, Auto-Increment, Manadatory and Default Value
+    CREATE TABLE Employees (
+        id INT NOT NULL AUTO_INCREMENT,
+        last_name VARCHAR(20) NOT NULL,
+        first_name VARCHAR(20) NOT NULL, 
+        middle_name VARCHAR(20),
+        age INT NOT NULL,
+        current_status VARCHAR(10) NOT NULL DEFAULT 'employed',
+        PRIMARY KEY (id)
+    );
+
+    INSERT INTO Employees (last_name, first_name, age) VALUES
+        ('Thi', 'Pra', 58);
+
+12. UPDATE
+    UPDATE cats SET name='ABC' WHERE name='DEF';
+
+13. DELETE
+    DELETE FROM cats WHERE name = 'DEF';
+    DELETE FROM cats; ---> Deletes everything
+
+14. ALIAS - Display Column Name differently
+    SELECT cat_id AS id, name FROM cats;
+    SELECT name AS 'cat name', breed AS 'kitty breed' FROM cats;
+
+100. Udemy Scripts
+https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to-expert/learn/lecture/7019784#announcements
+
+    a. Section 6: CRUD Commands - Working with Shirts table;
+
+        CREATE TABLE shirts (
+            shirt_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+            article VARCHAR(20),
+            color VARCHAR(20),
+            shirt_size VARCHAR(1),
+            last_worn INT
+        );
+
+        INSERT INTO shirts (article, color, shirt_size, last_worn) VALUES
+            ('t-shirt', 'white', 'S', 10),
+            ('t-shirt', 'green', 'S', 200),
+            ('polo shirt', 'black', 'M', 10),
+            ('tank top', 'blue', 'S', 50),
+            ('t-shirt', 'pink', 'S', 0),
+            ('polo shirt', 'red', 'M', 5),
+            ('tank top', 'white', 'S', 200),
+            ('tank top', 'blue', 'M', 15);
+
+        INSERT INTO shirts (article, color, shirt_size, last_worn) VALUES ('polo shirt', 'purple', 'M', 50);
+
+        select article, color from shirts;
+
+        select * from shirts where shirt_size = 'M';
+
+        select * from shirts where article='polo shirt';
+        update shirts SET shirt_size = 'L' where article='polo shirt';
+        select * from shirts where article='polo shirt';
+
+        UPDATE shirts SET last_worn=0 WHERE last_worn=15;
+
+        SELECT * FROM shirts WHERE color='white';
+        UPDATE shirts SET color='off white', shirt_size='XS' WHERE color='white';
+
+
+        DELETE FROM shirts WHERE last_worn=200;
+        DELETE FROM shirts WHERE article = 'tank top';
+        DELETE FROM shirts;
+    
+    b. Section 7. String Functions
+
+        SELECT REVERSE (UPPER ('Why does my cat look at me with such hatred?')) AS STRING_OP;
+
+        SELECT REPLACE (title, ' ', '->') AS 'Updated Title' from books ;
+
+        select author_lname AS forwards, REVERSE (author_lname) AS backwards from books;
+            +----------------+----------------+
+            | forwards       | backwards      |
+            +----------------+----------------+
+            | Lahiri         | irihaL         |
+
+        SELECT UPPER(CONCAT(author_fname, ' ', author_lname)) AS 'full name in caps' from books;
+            +----------------------+
+            | full name in caps    |
+            +----------------------+
+            | JHUMPA LAHIRI        |
+
+        SELECT CONCAT(title, ' was released in ', released_year) AS blurb FROM books;
+            +--------------------------------------------------------------------------+
+            | blurb                                                                    |
+            +--------------------------------------------------------------------------+
+            | The Namesake was released in 2003                                        |
+
+
+        SELECT title, CHAR_LENGTH(title) AS 'character count' FROM books;
+            +-----------------------------------------------------+-----------------+
+            | title                                               | character count |
+            +-----------------------------------------------------+-----------------+
+            | The Namesake                                        |              12 |
+
+        SELECT CONCAT(SUBSTRING(title,1,10),'...') AS 'short title', CONCAT(author_lname, ',', author_fname) AS author, CONCAT(stock_quantity, ' in stock') AS quantity F
+        ROM books;
+            +---------------+----------------------+--------------+
+            | short title   | author               | quantity     |
+            +---------------+----------------------+--------------+
+            | The Namesa... | Lahiri,Jhumpa        | 32 in stock  |
+
+    --------------------------------------------------
+    c. Chapter 8: DISTINCT, ORDER BY, LIMIT, LIKE
+
+        SELECT title FROM books WHERE title LIKE('%stories%');
+            +-----------------------------------------------------+
+            | title                                               |
+            +-----------------------------------------------------+
+            | What We Talk About When We Talk About Love: Stories |
+
+        SELECT title, pages FROM books ORDER BY pages DESC LIMIT 1;
+            +-------------------------------------------+-------+
+            | title                                     | pages |
+            +-------------------------------------------+-------+
+            | The Amazing Adventures of Kavalier & Clay |   634 |
+            +-------------------------------------------+-------+
+
+        SELECT CONCAT(title, ' - ', released_year) AS summary FROM books ORDER BY released_year DESC LIMIT 3;
+            Most Recently published 3 books
+
+        SELECT title, author_lname FROM books WHERE author_lname LIKE '% %';
+            Find all books with author last name that contain a space
+
+        SELECT title, released_year, stock_quantity FROM books ORDER BY stock_quantity LIMIT 3;
+            Find the 3 books with the lowest stock
+
+        SELECT title, author_lname from books ORDER BY author_lname, title;
+        SELECT title, author_lname from books ORDER BY 2, 3;
+            Print title and author_lname sorted first by lname and then by title
+
+        SELECT CONCAT('MY FAVORITE AUTHOR IS ', author_fname, ' ', author_lname, '!') AS yell FROM books ORDER BY author_lname;
+            +---------------------------------------------+
+            | yell                                        |
+            +---------------------------------------------+
+            | MY FAVORITE AUTHOR IS Raymond Carver!       |
+
+    -------------------------
+    Chapter 9: AGGREGATE FUNCTIONS
+
+        SELECT COUNT(*) FROM books;
+            Print the number of books in the DB
+
+        SELECT released_year, COUNT(*) AS count FROM books GROUP BY released_year;
+            How many Books released in each year
+            +---------------+-------+
+            | released_year | count |
+            +---------------+-------+
+            |          1945 |     1 |
+            |          1981 |     1 |
+
+        SELECT SUM(stock_quantity) AS 'total number of books in stock' FROM books;
+            +--------------------------------+
+            | total number of books in stock |
+            +--------------------------------+
+            |                           1134 |
+
+        SELECT author_fname, author_lname, AVG(released_year) AS 'average released year' FROM books GROUP BY author_fname, author_lname;
+            +--------------+----------------+-----------------------+
+            | author_fname | author_lname   | average released year |
+            +--------------+----------------+-----------------------+
+            | Dave         | Eggers         |             2008.6667 |
+
+        SELECT CONCAT(author_fname, ' ', author_lname) AS 'Full Name', pages FROM books ORDER BY pages DESC LIMIT 1;
+        SELECT CONCAT(author_fname, ' ', author_lname) AS 'Full Name', pages FROM books WHERE pages = (SELECT MAX(pages) FROM books);
+            This NEEDS SUB-QUERIES else won't get the right output - Check Problem with MIN, MAX
+            Full name of the author who wrote the longest book
+
+        SELECT released_year, COUNT(released_year) AS '# books', AVG(pages) AS 'avg pages' FROM books GROUP BY released_year;
+            Print Year, # of books in that year and Average Pages of all books in that year
+            +---------------+---------+-----------+
+            | released_year | # books | avg pages |
+            +---------------+---------+-----------+
+            |          1945 |       1 |  181.0000 |
+
+    --------------------------------------------------
+    Chapter 10: DATA TYPES
+        CREATE TABLE inventory (
+            item_name VARCHAR(100),
+            price DECIMAL(8,2),
+            quantity INT
+        );
+            Create table where price is always greater than 1,000,000
+
+        What is the difference between DATETIME and TIMESTAMP
+            They both store datetime information, but there's a difference in the range,
+            - TIMESTAMP has a smaller range. TIMESTAMP also takes up less space.
+            - TIMESTAMP is used for things like meta-data about when something is created or updated.
+
+        SELECT CURTIME(); - Print Current Time
+        SELECT CURDATE(); - Print Current Date
+
+        SELECT DAYOFWEEK(CURDATE()) AS 'Current Day of the Week'; - Prints Current Number of the Day of the week
+        SELECT DAYOFWEEK(NOW()) AS 'Current Day of the Week'; - Prints Current Number of the Day of the week
+
+        SELECT DAYNAME(CURDATE()) AS 'Current Day of the Week'; - Prints Current Day of the week
+        SELECT DAYNAME(NOW()) AS 'Current Day of the Week'; - Prints Current Day of the week
+
+        SELECT DATE_FORMAT(CURDATE(), '%m/%d/%Y'); - Date as mm/dd/yyyy
+            +------------------------------------+
+            | DATE_FORMAT(CURDATE(), '%m/%d/%Y') |
+            +------------------------------------+
+            | 11/08/2021                         |
+            +------------------------------------+
+
+        SELECT DATE_FORMAT(NOW(), '%M %D at %h:%i');
+            +--------------------------------------+
+            | DATE_FORMAT(NOW(), '%M %D at %h:%i') |
+            +--------------------------------------+
+            | November 8th at 03:29                |
+            +--------------------------------------+
+
+        CREATE TABLE where automatic TIMESTAMP is stored
+            CREATE TABLE tweets(
+                content VARCHAR(140),
+                username VARCHAR(20),
+                created_at TIMESTAMP DEFAULT NOW()
+            );
+
+    --------------------------------------------------
+    Chapter 11: Logical Operators !=, NOT LIKE, >, <, AND, OR, BETWEEN, IN, NOT IN,
+        FALSE = 0;
+        TRUE = 1;
+
+            CASE Statements
+                SELECT title, released_year,
+                       CASE
+                         WHEN released_year >= 2000 THEN 'Modern Lit'
+                         ELSE '20th Century Lit'
+                       END AS GENRE
+                FROM books;
+
+                SELECT title, stock_quantity,
+                    CASE
+                        WHEN stock_quantity BETWEEN 0 AND 50 THEN '*'
+                        WHEN stock_quantity BETWEEN 51 AND 100 THEN '**'
+                        ELSE '***'
+                    END AS STOCK
+                FROM books;
+
+            SELECT * FROM books WHERE released_year < 1980;
+
+            SELECT * FROM books WHERE author_lname IN ('Eggers', 'Chabon');
+                Select ALL books wirtten by Eggers or Chabon
+
+            SELECT * FROM books WHERE author_lname = 'lahiri' AND released_year > 2000;
+
+            SELECT * FROM books WHERE pages BETWEEN 100 AND 200;
+            SELECT title, pages FROM books WHERE pages >= 100 && pages <=200;
+                Select ALL books between page count 100 and 200
+
+            SELECT * FROM books WHERE author_lname LIKE ('C%') OR author_lname LIKE ('S%');
+            SELECT title, author_lname FROM books WHERE SUBSTR(author_lname,1,1) IN ('C', 'S');
+                Author last name starts with C or S
+
+
+            SELECT title, author_lname,
+                CASE
+                    WHEN title LIKE '%stories%' THEN 'Short Stories'
+                    WHEN title = 'JustKids' OR title = 'A Heartbreaking Work of Staggering Genius' THEN 'Memoir'
+                    ELSE 'Novel'
+                END AS type
+            FROM books;
+
+
+            SELECT author_fname, author_lname,
+                CASE
+                    WHEN COUNT(*) = 1 THEN '1 book'
+                    ELSE CONCAT(COUNT(*), ' books')
+                END AS COUNT
+            FROM books
+            GROUP BY author_lname, author_fname;
+                +--------------+----------------+---------+
+                | author_fname | author_lname   | COUNT   |
+                +--------------+----------------+---------+
+                | Raymond      | Carver         | 2 books |
+                | Michael      | Chabon         | 1 book  |
+
