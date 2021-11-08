@@ -1,0 +1,2 @@
+# LearnSql
+My SQL Learnings
