@@ -3,6 +3,33 @@
 2. DATABASE Commands
 3. TABLE Commands
 4. DATATYPES
+5. INSERT
+6. How to INSERT VARCHAR (String) values with Quotes
+7. SHOW WARNINGS
+8. DEFAULT VALUES in case of WARNINGS
+9. Is both DEFAULT and NOT NULL needed?
+10. PRIMARY_KEY and AUTO_INCREMENT
+11. QUERY to Create and Insert with Primary Key, Auto-Increment, Manadatory and Default Value
+12. UPDATE
+13. DELETE
+14. ALIAS - Display Column Name differently
+100. Udemy Scripts
+    a. Section 6: CRUD Commands - Working with Shirts table;
+    b. Section 7. String Functions
+    c. Chapter 8: DISTINCT, ORDER BY, LIMIT, LIKE
+    d. Chapter 9: AGGREGATE FUNCTIONS
+    e. Chapter 10: DATA TYPES
+        Difference between CHAR and VARCHAR
+        What is the difference between DATETIME and TIMESTAMP
+    f. Chapter 11: Logical Operators !=, NOT LIKE, >, <, AND, OR, BETWEEN, IN, NOT IN,
+101. CREATE TABLE with FOREIGN KEY
+102. SUBQUERY
+103. INNER JOIN
+104. Many to One Relationship
+    1. Select Title and Display ratings
+    2. AVG, GROUP BY, ORDER BY and JOIN
+    4. USE IS for comparing NULL
+
 ----------------------------------------------------------------------------------------------------
 0. Useful Links
     https://www.youtube.com/watch?v=DjhthBTXvXg
@@ -66,6 +93,10 @@
         Single Quote
 
         varchar(100) - 100 specifies the length of String we will have
+
+    YEAR(4) -> To represent year
+
+    DECIMAL(5, 2) -> 5 means the maximum number of digits (Both before and After the decimal point; 2 is the number of digits after the point)
 
 5. INSERT
     INSERT INTO table_name(column1, column2) VALUES ("val1", val2);
@@ -231,7 +262,7 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
             | MY FAVORITE AUTHOR IS Raymond Carver!       |
 
     -------------------------
-    Chapter 9: AGGREGATE FUNCTIONS
+    d. Chapter 9: AGGREGATE FUNCTIONS
 
         SELECT COUNT(*) FROM books;
             Print the number of books in the DB
@@ -269,7 +300,7 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
             |          1945 |       1 |  181.0000 |
 
     --------------------------------------------------
-    Chapter 10: DATA TYPES
+    e. Chapter 10: DATA TYPES
         CREATE TABLE inventory (
             item_name VARCHAR(100),
             price DECIMAL(8,2),
@@ -277,7 +308,13 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
         );
             Create table where price is always greater than 1,000,000
 
-        What is the difference between DATETIME and TIMESTAMP
+    Difference between CHAR and VARCHAR
+        CHAR is faster for fixed length text
+            State Abbrevation: CA, NY
+            Yes/No Flags: Y/N
+            Sex: M/F
+
+    What is the difference between DATETIME and TIMESTAMP
             They both store datetime information, but there's a difference in the range,
             - TIMESTAMP has a smaller range. TIMESTAMP also takes up less space.
             - TIMESTAMP is used for things like meta-data about when something is created or updated.
@@ -313,7 +350,7 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
             );
 
     --------------------------------------------------
-    Chapter 11: Logical Operators !=, NOT LIKE, >, <, AND, OR, BETWEEN, IN, NOT IN,
+    f. Chapter 11: Logical Operators !=, NOT LIKE, >, <, AND, OR, BETWEEN, IN, NOT IN,
         FALSE = 0;
         TRUE = 1;
 
@@ -371,3 +408,220 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
                 | Raymond      | Carver         | 2 books |
                 | Michael      | Chabon         | 1 book  |
 
+101. CREATE TABLE with FOREIGN KEY
+    CREATE TABLE customers (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        first_name VARCHAR(100),
+        last_name VARCHAR(100),
+        email VARCHAR(100),
+    );
+
+    CREATE TABLE orders(
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        order_date DATE,
+        amount DECIMAL(8,2),
+        customer_id INT,
+        FOREIGN KEY(customer_id) REFERENCES customers(id)
+    );
+
+    ON DELETE CASCADE
+        CREATE TABLE students (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            first_name VARCHAR(100)
+        );
+
+        CREATE TABLE papers (
+            title VARCHAR(100),
+            grade INT,
+            student_id INT,
+            FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+        );
+
+102. SUBQUERY
+    SELECT * FROM orders WHERE customer_id =
+        (
+            SELECT id FROM customers
+            WHERE last_name='George'
+        );
+
+103. INNER JOIN
+    IMPLICIT:
+        SELECT first_name, last_name, order_date, amount FROM customers, orders WHERE customers.id = orders.customer_id;
+
+    EXPLICIT:
+        SELECT first_name, last_name, order_date, amount FROM customers JOIN orders ON customers.id = orders.customer_id;
+
+
+    SELECT first_name, title, grade FROM students JOIN papers ON students.id = papers.student_id ORDER BY papers.grade DESC;
+        +------------+---------------------------------------+-------+
+        | first_name | title                                 | grade |
+        +------------+---------------------------------------+-------+
+        | Samantha   | De Montaigne and The Art of The Essay |    98 | 
+
+    SELECT first_name, title, grade FROM students LEFT JOIN papers ON students.id = papers.student_id;
+        +------------+---------------------------------------+-------+
+        | first_name | title                                 | grade |
+        +------------+---------------------------------------+-------+
+        | Caleb      | My First Book Report                  |    60 |
+        | Caleb      | My Second Book Report                 |    75 |
+        | Samantha   | Russian Lit Through The Ages          |    94 |
+        | Samantha   | De Montaigne and The Art of The Essay |    98 |
+        | Raj        | NULL                                  |  NULL |
+        | Carlos     | Borges and Magical Realism            |    89 |
+        | Lisa       | NULL                                  |  NULL |
+        +------------+---------------------------------------+-------+
+
+
+    IFNULL
+    SELECT first_name, IFNULL(title, 'Missing') AS 'title', IFNULL (grade, 0) AS 'grade' FROM students LEFT JOIN papers ON students.id = papers.student_id;
+        +------------+---------------------------------------+-------+
+        | first_name | title                                 | grade |
+        +------------+---------------------------------------+-------+
+        | Caleb      | My First Book Report                  |    60 |
+        | Caleb      | My Second Book Report                 |    75 |
+        | Samantha   | Russian Lit Through The Ages          |    94 |
+        | Samantha   | De Montaigne and The Art of The Essay |    98 |
+        | Raj        | Missing                               |     0 |
+        | Carlos     | Borges and Magical Realism            |    89 |
+        | Lisa       | Missing                               |     0 |
+        +------------+---------------------------------------+-------+
+
+
+    LEFT JOIN, GROUP BY, ORDER BY, IFNULL, AVG
+    SELECT first_name, AVG (IFNULL (grade, 0)) AS 'average' FROM students LEFT JOIN papers ON students.id = papers.student_id GROUP BY first_name ORDER BY grade DESC;
+    Multi-Line
+        SELECT 
+            first_name, 
+            AVG (IFNULL (grade, 0)) AS 'average' 
+        FROM students 
+        LEFT JOIN papers 
+            ON students.id = papers.student_id 
+        GROUP BY first_name 
+        ORDER BY grade DESC;
+        +------------+---------+
+        | first_name | average |
+        +------------+---------+
+        | Samantha   | 96.0000 |
+        | Carlos     | 89.0000 |
+        | Caleb      | 67.5000 |
+        | Raj        |  0.0000 |
+        | Lisa       |  0.0000 |
+        +------------+---------+
+
+    CASE;
+    IMP: Can't use 'average' in CASE as this column is not defined
+        SELECT
+            first_name,
+            AVG (IFNULL (grade, 0)) AS 'average',
+            CASE
+                WHEN AVG(grade) >= 75 THEN 'PASSING'
+                ELSE 'FAILING'
+            END AS 'passing_status'
+        FROM students
+        LEFT JOIN papers
+            ON students.id = papers.student_id
+        GROUP BY students.id
+        ORDER BY grade DESC
+            +------------+---------+----------------+
+            | first_name | average | passing_status |
+            +------------+---------+----------------+
+            | Samantha   | 96.0000 | PASSING        |
+            | Carlos     | 89.0000 | PASSING        |
+            | Caleb      | 67.5000 | FAILING        |
+            | Raj        |  0.0000 | FAILING        |
+            | Lisa       |  0.0000 | FAILING        |
+
+104. Many to One Relationship
+    CREATE TABLE reviewers(
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        first_name VARCHAR(100),
+        last_name VARCHAR(100)
+    );
+
+    CREATE TABLE series (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        title VARCHAR(100),
+        released_year YEAR(4),
+        genre VARCHAR(100)
+    );
+
+    CREATE TABLE reviews (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        rating DECIMAL(2,1),
+        series_id INT,
+        reviewer_id INT,
+        FOREIGN KEY (series_id) REFERENCES series(id),
+        FOREIGN KEY (reviewer_id) REFERENCES reviewers(id)
+    );
+
+    1. Select Title and Display ratings
+        SELECT title, 
+            rating 
+        FROM series
+        JOIN reviews
+            ON series.id = reviews.series_id;
+
+    2. AVG, GROUP BY, ORDER BY and JOIN
+        SELECT title, 
+            AVG(rating) AS 'avg_rating'
+        FROM series
+        JOIN reviews
+            ON series.id = reviews.series_id
+        GROUP BY series.id
+        ORDER BY avg_rating ASC;	
+
+    3.
+        SELECT
+            first_name,
+            last_name,
+            rating
+        FROM reviewers
+        JOIN reviews
+            ON reviewers.id = reviews.reviewer_id;
+
+
+    4. USE IS for comparing NULL
+        SELECT 
+            title AS 'unreviewed_series'
+        FROM series
+        LEFT JOIN reviews
+            ON series.id = reviews.series_id
+        WHERE reviews.rating IS NULL;
+
+    5. ROUND DECIMAL values and LEFT JOIN / INNER JOIN will work too
+        SELECT 
+            genre,
+            ROUND(AVG(rating), 2) AS 'avg_rating'
+        FROM series
+        LEFT JOIN reviews
+            ON series.id = reviews.series_id
+        GROUP BY series.genre;
+
+    6. CASE, LEFT JOIN, GROUP BY
+        SELECT 
+            first_name,
+            last_name,
+            COUNT(rating) AS 'COUNT',
+            MIN(IFNULL(rating, 0.0)) AS 'MIN',
+            MAX(IFNULL(rating, 0.0)) AS 'MAX',
+            AVG(IFNULL(rating, 0.0)) AS 'AVG',
+            CASE
+                WHEN COUNT(rating) > 0 THEN 'ACTIVE'
+                ELSE 'INACTIVE'
+            END AS 'STATUS'
+        FROM reviewers
+        LEFT JOIN reviews
+            ON reviewers.id = reviews.reviewer_id
+        GROUP BY reviewers.id;
+
+    7. JOIN Multi Tables
+        SELECT 
+            title,
+            rating,
+            CONCAT (first_name, ' ', last_name) AS reviewer
+        FROM series
+        JOIN reviews 
+            ON series.id = reviews.series_id
+        JOIN reviewers 
+            ON reviewers.id = reviews.reviewer_id
+        ORDER BY title;
