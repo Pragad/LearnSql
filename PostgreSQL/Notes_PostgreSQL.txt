@@ -1,0 +1,109 @@
+Install the app and set the PATH:
+export PATH="/Applications/Postgres.app/Contents/Versions/14/bin/:$PATH"
+
+postgres -V
+which psql
+
+psql
+
+1. List all roles
+\du
+
+2. List all databases
+\l
+
+3. CREATE database
+CREATE DATABASE employee;
+\l
+
+4. Grant permissions to a DB for a role
+  pragad=# GRANT ALL PRIVILEGES on DATABASE "employee" TO pragad;
+  GRANT
+  pragad=# GRANT ALL PRIVILEGES on DATABASE "employee" TO postgres;
+  GRANT
+
+5. Connect to a DB
+  \c employy
+
+6. See existing relationships
+employee=# \d
+               List of relations
+ Schema |       Name        |   Type   | Owner
+--------+-------------------+----------+--------
+ public | employee          | table    | pragad
+ public | employee_sequence | sequence | pragad
+(2 rows)
+
+7. Connecting to Postgres DB
+https://github.com/amigoscode/spring-data-jpa-course/blob/main/src/main/resources/application.properties
+  spring.datasource.url=jdbc:postgresql://localhost:5432/employee
+  spring.datasource.username=
+  spring.datasource.password=
+  spring.jpa.hibernate.ddl-auto=create-drop
+  spring.jpa.show-sql=true
+  spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+  spring.jpa.properties.hibernate.format_sql=true
+
+8. DESCRIBE TABLE
+  employee=# \d employee
+                        Table "public.employee"
+    Column  |          Type          | Collation | Nullable | Default
+  ----------+------------------------+-----------+----------+---------
+   id       | bigint                 |           | not null |
+   age      | integer                |           | not null |
+   company  | character varying(255) |           |          |
+   email    | character varying(255) |           |          |
+   location | character varying(255) |           |          |
+   name     | character varying(255) |           |          |
+  Indexes:
+      "employee_pkey" PRIMARY KEY, btree (id)
+
+9. 
+========
+DUMP from brew
+This formula has created a default database cluster with:
+  initdb --locale=C -E UTF-8 /usr/local/var/postgresql@15
+For more details, read:
+  https://www.postgresql.org/docs/15/app-initdb.html
+
+postgresql@15 is keg-only, which means it was not symlinked into /usr/local,
+because this is an alternate version of another formula.
+
+If you need to have postgresql@15 first in your PATH, run:
+  echo 'export PATH="/usr/local/opt/postgresql@15/bin:$PATH"' >> ~/.zshrc
+
+For compilers to find postgresql@15 you may need to set:
+  export LDFLAGS="-L/usr/local/opt/postgresql@15/lib"
+  export CPPFLAGS="-I/usr/local/opt/postgresql@15/include"
+
+
+To start postgresql@15 now and restart at login:
+  brew services start postgresql@15
+==> git
+The Tcl/Tk GUIs (e.g. gitk, git-gui) are now in the `git-gui` formula.
+Subversion interoperability (git-svn) is now in the `git-svn` formula.
+
+zsh completions and functions have been installed to:
+  /usr/local/share/zsh/site-functions
+
+========
+
+==> Pouring postgresql@14--14.7.monterey.bottle.tar.gz
+==> /usr/local/Cellar/postgresql@14/14.7/bin/initdb --locale=C -E UTF-8 /usr/local/var/postgresql@14
+==> Caveats
+This formula has created a default database cluster with:
+  initdb --locale=C -E UTF-8 /usr/local/var/postgresql@14
+For more details, read:
+  https://www.postgresql.org/docs/14/app-initdb.html
+
+To restart postgresql@14 after an upgrade:
+  brew services restart postgresql@14
+Or, if you don't want/need a background service you can just run:
+  /usr/local/opt/postgresql@14/bin/postgres -D /usr/local/var/postgresql@14
+==> Summary
+🍺  /usr/local/Cellar/postgresql@14/14.7: 3,314 files, 44.5MB
+==> Running `brew cleanup postgresql@14`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+========
+brew services start postgresql@15

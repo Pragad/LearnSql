@@ -1,3 +1,6 @@
+https://www.w3schools.com/Sql/sql_join_inner.asp
+https://stackoverflow.com/questions/18153665/inner-join-where-clause
+
 0. Useful Links
 1. Notes
 2. DATABASE Commands
@@ -61,7 +64,7 @@
 3. TABLE Commands
     TABLEs hold data
 
-    CREATE TABLE tablename 
+    CREATE TABLE tablename
         (
             column_name data_type,
             column_name data_type
@@ -76,7 +79,7 @@
     DESCRIBE/DESC
         - DESCRIBE <table_name>
 
-    DELETE/DROP 
+    DELETE/DROP
         - DROP TABLE  <tablename>
 
 4. DATATYPES
@@ -124,7 +127,7 @@
     CREATE TABLE Employees (
         id INT NOT NULL AUTO_INCREMENT,
         last_name VARCHAR(20) NOT NULL,
-        first_name VARCHAR(20) NOT NULL, 
+        first_name VARCHAR(20) NOT NULL,
         middle_name VARCHAR(20),
         age INT NOT NULL,
         current_status VARCHAR(10) NOT NULL DEFAULT 'employed',
@@ -187,7 +190,7 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
         DELETE FROM shirts WHERE last_worn=200;
         DELETE FROM shirts WHERE article = 'tank top';
         DELETE FROM shirts;
-    
+
     b. Section 7. String Functions
 
         SELECT REVERSE (UPPER ('Why does my cat look at me with such hatred?')) AS STRING_OP;
@@ -456,7 +459,7 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
         +------------+---------------------------------------+-------+
         | first_name | title                                 | grade |
         +------------+---------------------------------------+-------+
-        | Samantha   | De Montaigne and The Art of The Essay |    98 | 
+        | Samantha   | De Montaigne and The Art of The Essay |    98 |
 
     SELECT first_name, title, grade FROM students LEFT JOIN papers ON students.id = papers.student_id;
         +------------+---------------------------------------+-------+
@@ -490,13 +493,13 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
     LEFT JOIN, GROUP BY, ORDER BY, IFNULL, AVG
     SELECT first_name, AVG (IFNULL (grade, 0)) AS 'average' FROM students LEFT JOIN papers ON students.id = papers.student_id GROUP BY first_name ORDER BY grade DESC;
     Multi-Line
-        SELECT 
-            first_name, 
-            AVG (IFNULL (grade, 0)) AS 'average' 
-        FROM students 
-        LEFT JOIN papers 
-            ON students.id = papers.student_id 
-        GROUP BY first_name 
+        SELECT
+            first_name,
+            AVG (IFNULL (grade, 0)) AS 'average'
+        FROM students
+        LEFT JOIN papers
+            ON students.id = papers.student_id
+        GROUP BY first_name
         ORDER BY grade DESC;
         +------------+---------+
         | first_name | average |
@@ -555,20 +558,20 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
     );
 
     1. Select Title and Display ratings
-        SELECT title, 
-            rating 
+        SELECT title,
+            rating
         FROM series
         JOIN reviews
             ON series.id = reviews.series_id;
 
     2. AVG, GROUP BY, ORDER BY and JOIN
-        SELECT title, 
+        SELECT title,
             AVG(rating) AS 'avg_rating'
         FROM series
         JOIN reviews
             ON series.id = reviews.series_id
         GROUP BY series.id
-        ORDER BY avg_rating ASC;	
+        ORDER BY avg_rating ASC;
 
     3.
         SELECT
@@ -581,7 +584,7 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
 
 
     4. USE IS for comparing NULL
-        SELECT 
+        SELECT
             title AS 'unreviewed_series'
         FROM series
         LEFT JOIN reviews
@@ -589,7 +592,7 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
         WHERE reviews.rating IS NULL;
 
     5. ROUND DECIMAL values and LEFT JOIN / INNER JOIN will work too
-        SELECT 
+        SELECT
             genre,
             ROUND(AVG(rating), 2) AS 'avg_rating'
         FROM series
@@ -598,7 +601,7 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
         GROUP BY series.genre;
 
     6. CASE, LEFT JOIN, GROUP BY
-        SELECT 
+        SELECT
             first_name,
             last_name,
             COUNT(rating) AS 'COUNT',
@@ -615,13 +618,13 @@ https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to
         GROUP BY reviewers.id;
 
     7. JOIN Multi Tables
-        SELECT 
+        SELECT
             title,
             rating,
             CONCAT (first_name, ' ', last_name) AS reviewer
         FROM series
-        JOIN reviews 
+        JOIN reviews
             ON series.id = reviews.series_id
-        JOIN reviewers 
+        JOIN reviewers
             ON reviewers.id = reviews.reviewer_id
         ORDER BY title;
