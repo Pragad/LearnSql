@@ -16,6 +16,7 @@ https://stackoverflow.com/questions/18153665/inner-join-where-clause
 12. UPDATE
 13. DELETE
 14. ALIAS - Display Column Name differently
+15. CREATE INDEX
 100. Udemy Scripts
     a. Section 6: CRUD Commands - Working with Shirts table;
     b. Section 7. String Functions
@@ -147,6 +148,10 @@ https://stackoverflow.com/questions/18153665/inner-join-where-clause
 14. ALIAS - Display Column Name differently
     SELECT cat_id AS id, name FROM cats;
     SELECT name AS 'cat name', breed AS 'kitty breed' FROM cats;
+
+15. CREATE INDEX
+https://stackoverflow.com/questions/7744038/decision-when-to-create-index-on-table-column-in-database
+    As a simple reminder, you can create an index in columns that are common in WHERE, ORDER BY and GROUP BY clauses. You may consider adding an index in colums that are used to relate other tables (through a JOIN, for example)
 
 100. Udemy Scripts
 https://www.udemy.com/course/the-ultimate-mysql-bootcamp-go-from-sql-beginner-to-expert/learn/lecture/7019784#announcements
